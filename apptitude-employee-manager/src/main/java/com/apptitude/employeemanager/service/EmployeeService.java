@@ -25,10 +25,10 @@ public class EmployeeService {
      * Create a new employee.
      */
     public EmployeeDTO createEmployee(EmployeeDTO employee) {
-        if (employee.getName() == null || employee.getName().trim().isEmpty()) {
+        if (employee.name() == null || employee.name().trim().isEmpty()) {
             throw new IllegalArgumentException("Employee name cannot be empty");
         }
-        if (employee.getDepartment() == null || employee.getDepartment().trim().isEmpty()) {
+        if (employee.department() == null || employee.department().trim().isEmpty()) {
             throw new IllegalArgumentException("Employee department cannot be empty");
         }
         return repository.create(employee);
@@ -66,7 +66,7 @@ public class EmployeeService {
      */
     public java.util.Map<String, Long> getEmployeeCountByDepartment() {
         return repository.findAll().stream()
-                .collect(Collectors.groupingBy(EmployeeDTO::getDepartment, Collectors.counting()));
+                .collect(Collectors.groupingBy(EmployeeDTO::department, Collectors.counting()));
     }
 
     /**
@@ -79,7 +79,7 @@ public class EmployeeService {
         if (repository.findById(id).isEmpty()) {
             throw new IllegalArgumentException("Employee with ID " + id + " not found");
         }
-        if (employee.getName() == null || employee.getName().trim().isEmpty()) {
+        if (employee.name() == null || employee.name().trim().isEmpty()) {
             throw new IllegalArgumentException("Employee name cannot be empty");
         }
         return repository.update(id, employee);
@@ -104,8 +104,8 @@ public class EmployeeService {
         }
         String searchSkill = skill.toLowerCase(Locale.ROOT);
         return repository.findAll().stream()
-                .filter(emp -> emp.getSkills() != null &&
-                              emp.getSkills().stream()
+                .filter(emp -> emp.skills() != null &&
+                              emp.skills().stream()
                                   .anyMatch(s -> s.toLowerCase(Locale.ROOT).contains(searchSkill)))
                 .collect(Collectors.toList());
     }
@@ -125,7 +125,7 @@ public class EmployeeService {
             Optional<EmployeeDTO> employeeDTO = getEmployeeById(id);
             if (employeeDTO.isPresent()) {
                 var dto = employeeDTO.get();
-                return new Employee(dto.getId(), dto.getName(), dto.getDepartment(), dto.getSkills());
+                return new Employee(dto.id(), dto.name(), dto.department(), dto.skills());
             }
             throw new IllegalArgumentException("Employee with ID " + id + " not found");
         });

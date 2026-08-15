@@ -72,8 +72,8 @@ public class RemoteEmployeeRepository implements EmployeeRepository {
         }
 
         return findAll().stream()
-                .filter(emp -> emp != null && emp.getDepartment() != null)
-                .filter(emp -> emp.getDepartment().equalsIgnoreCase(department.trim()))
+                .filter(emp -> emp != null && emp.department() != null)
+                .filter(emp -> emp.department().equalsIgnoreCase(department.trim()))
                 .collect(Collectors.toList());
     }
 
@@ -109,10 +109,10 @@ public class RemoteEmployeeRepository implements EmployeeRepository {
 
         if (payload != null) {
             String requestBody = OBJECT_MAPPER.writeValueAsString(Map.of(
-                    "id", payload.getId(),
-                    "name", payload.getName(),
-                    "department", payload.getDepartment(),
-                    "skills", payload.getSkills() == null ? Collections.emptyList() : payload.getSkills()
+                    "id", payload.id(),
+                    "name", payload.name(),
+                    "department", payload.department(),
+                    "skills", payload.skills() == null ? Collections.emptyList() : payload.skills()
             ));
             requestBuilder.method(method, HttpRequest.BodyPublishers.ofString(requestBody));
         } else {

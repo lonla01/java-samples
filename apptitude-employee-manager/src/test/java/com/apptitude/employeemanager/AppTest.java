@@ -18,9 +18,9 @@ class AppTest {
                 Arrays.asList("Java", "Spring")
         );
 
-        assertEquals(1L, employee.getId());
-        assertEquals("Alice Johnson", employee.getName());
-        assertEquals("Engineering", employee.getDepartment());
-        assertEquals(Arrays.asList("Java", "Spring"), employee.getSkills());
+        assertEquals(1L, employee.id());
+        assertEquals("Alice Johnson", employee.name());
+        assertEquals("Engineering", employee.department());
+        assertEquals(Arrays.asList("Java", "Spring"), employee.skills());
     }
 }

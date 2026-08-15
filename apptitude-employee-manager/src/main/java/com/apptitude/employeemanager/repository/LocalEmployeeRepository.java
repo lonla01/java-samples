@@ -77,21 +77,23 @@ public class LocalEmployeeRepository implements EmployeeRepository {
                     Arrays.asList("Swift", "iOS Development", "Mobile Architecture"))
         );
 
-        initialData.forEach(emp -> employees.put(emp.getId(), emp));
+        initialData.forEach(emp -> employees.put(emp.id(), emp));
     }
 
     @Override
     public EmployeeDTO create(EmployeeDTO employee) {
         // Simulate remote POST call
         System.out.println("Simulating POST to " + SERVICE_URL);
-        if (employee.getId() == null) {
+        if (employee.id() == null) {
             Long nextId = employees.keySet().stream()
                     .mapToLong(Long::longValue)
                     .max()
                     .orElse(0L) + 1;
-            employee.setId(nextId);
+            EmployeeDTO created = new EmployeeDTO(nextId, employee.name(), employee.department(), employee.skills());
+            employees.put(nextId, created);
+            return created;
         }
-        employees.put(employee.getId(), employee);
+        employees.put(employee.id(), employee);
         return employee;
     }
 
@@ -114,7 +116,7 @@ public class LocalEmployeeRepository implements EmployeeRepository {
         // Simulate remote GET call with filter
         System.out.println("Simulating GET from " + SERVICE_URL + "?department=" + department);
         return employees.values().stream()
-                .filter(emp -> emp.getDepartment().equalsIgnoreCase(department))
+                .filter(emp -> emp.department().equalsIgnoreCase(department))
                 .collect(Collectors.toList());
     }
 
@@ -122,9 +124,9 @@ public class LocalEmployeeRepository implements EmployeeRepository {
     public EmployeeDTO update(Long id, EmployeeDTO employee) {
         // Simulate remote PUT call
         System.out.println("Simulating PUT to " + SERVICE_URL + "/" + id);
-        employee.setId(id);
-        employees.put(id, employee);
-        return employee;
+        EmployeeDTO updated = new EmployeeDTO(id, employee.name(), employee.department(), employee.skills());
+        employees.put(id, updated);
+        return updated;
     }
 
     @Override

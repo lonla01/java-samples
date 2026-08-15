@@ -7,20 +7,4 @@ public record Employee(Long id, String name, String department, List<String> ski
     public Employee {
         skills = List.copyOf(skills == null ? List.of() : skills);
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public List<String> getSkills() {
-        return skills;
-    }
 }

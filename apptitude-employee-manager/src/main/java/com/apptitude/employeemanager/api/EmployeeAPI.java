@@ -151,21 +151,5 @@ public class EmployeeAPI {
         public ApiResponse(int statusCode, String message, T data) {
             this(statusCode, message, data, System.currentTimeMillis());
         }
-
-        public int getStatusCode() {
-            return statusCode;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public T getData() {
-            return data;
-        }
-
-        public long getTimestamp() {
-            return timestamp;
-        }
     }
 }

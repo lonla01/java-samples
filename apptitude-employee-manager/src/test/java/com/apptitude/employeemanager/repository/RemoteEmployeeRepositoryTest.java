@@ -18,7 +18,7 @@ class RemoteEmployeeRepositoryTest {
 
         assertNotNull(employees);
         assertFalse(employees.isEmpty());
-        assertTrue(employees.stream().allMatch(emp -> emp.getId() != null));
+        assertTrue(employees.stream().allMatch(emp -> emp.id() != null));
     }
 
     @Test
@@ -26,9 +26,9 @@ class RemoteEmployeeRepositoryTest {
         Optional<EmployeeDTO> employee = repository.findById(1L);
 
         assertTrue(employee.isPresent());
-        assertEquals(1L, employee.get().getId());
-        assertEquals("Leanne Graham", employee.get().getName());
-        assertNotNull(employee.get().getSkills());
+        assertEquals(1L, employee.get().id());
+        assertEquals("Leanne Graham", employee.get().name());
+        assertNotNull(employee.get().skills());
     }
 
     @Test
@@ -37,6 +37,6 @@ class RemoteEmployeeRepositoryTest {
 
         assertNotNull(employees);
         assertFalse(employees.isEmpty());
-        assertTrue(employees.stream().allMatch(emp -> "Romaguera-Crona".equalsIgnoreCase(emp.getDepartment())));
+        assertTrue(employees.stream().allMatch(emp -> "Romaguera-Crona".equalsIgnoreCase(emp.department())));
     }
 }
