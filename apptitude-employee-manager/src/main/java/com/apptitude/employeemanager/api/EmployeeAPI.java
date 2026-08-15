@@ -147,17 +147,9 @@ public class EmployeeAPI {
     /**
      * Generic API Response wrapper.
      */
-    public static class ApiResponse<T> {
-        private final int statusCode;
-        private final String message;
-        private final T data;
-        private final long timestamp;
-
+    public record ApiResponse<T>(int statusCode, String message, T data, long timestamp) {
         public ApiResponse(int statusCode, String message, T data) {
-            this.statusCode = statusCode;
-            this.message = message;
-            this.data = data;
-            this.timestamp = System.currentTimeMillis();
+            this(statusCode, message, data, System.currentTimeMillis());
         }
 
         public int getStatusCode() {
@@ -174,16 +166,6 @@ public class EmployeeAPI {
 
         public long getTimestamp() {
             return timestamp;
-        }
-
-        @Override
-        public String toString() {
-            return "ApiResponse{" +
-                    "statusCode=" + statusCode +
-                    ", message='" + message + '\'' +
-                    ", data=" + data +
-                    ", timestamp=" + timestamp +
-                    '}';
         }
     }
 }

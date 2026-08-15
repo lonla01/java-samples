@@ -4,6 +4,7 @@ import com.apptitude.employeemanager.dto.EmployeeDTO;
 import com.apptitude.employeemanager.model.Employee;
 import com.apptitude.employeemanager.repository.EmployeeRepository;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -75,7 +76,7 @@ public class EmployeeService {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Invalid employee ID");
         }
-        if (!repository.findById(id).isPresent()) {
+        if (repository.findById(id).isEmpty()) {
             throw new IllegalArgumentException("Employee with ID " + id + " not found");
         }
         if (employee.getName() == null || employee.getName().trim().isEmpty()) {
@@ -101,11 +102,11 @@ public class EmployeeService {
         if (skill == null || skill.trim().isEmpty()) {
             throw new IllegalArgumentException("Skill name cannot be empty");
         }
-        String searchSkill = skill.toLowerCase();
+        String searchSkill = skill.toLowerCase(Locale.ROOT);
         return repository.findAll().stream()
-                .filter(emp -> emp.getSkills() != null && 
+                .filter(emp -> emp.getSkills() != null &&
                               emp.getSkills().stream()
-                                  .anyMatch(s -> s.toLowerCase().contains(searchSkill)))
+                                  .anyMatch(s -> s.toLowerCase(Locale.ROOT).contains(searchSkill)))
                 .collect(Collectors.toList());
     }
 
@@ -114,22 +115,19 @@ public class EmployeeService {
      */
     public CompletableFuture<EmployeeDTO> findEmployeeByIdAsync(Long id) {
         return CompletableFuture.supplyAsync(() -> getEmployeeById(id))
-        .thenApply(opt -> opt
-            .orElseThrow(
-                () -> new IllegalArgumentException("Employee with ID " + id + " not found")
-            )
-        );
+                .thenApply(opt -> opt.orElseThrow(
+                        () -> new IllegalArgumentException("Employee with ID " + id + " not found")
+                ));
     }
 
     public CompletableFuture<Employee> ___findEmployeeByIdAsync(Long id) {
         return CompletableFuture.supplyAsync(() -> {
             Optional<EmployeeDTO> employeeDTO = getEmployeeById(id);
             if (employeeDTO.isPresent()) {
-                EmployeeDTO dto = employeeDTO.get();
+                var dto = employeeDTO.get();
                 return new Employee(dto.getId(), dto.getName(), dto.getDepartment(), dto.getSkills());
-            } else {
-                throw new IllegalArgumentException("Employee with ID " + id + " not found");
             }
+            throw new IllegalArgumentException("Employee with ID " + id + " not found");
         });
     }
 }
