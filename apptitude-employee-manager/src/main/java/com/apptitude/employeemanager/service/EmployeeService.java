@@ -1,6 +1,7 @@
 package com.apptitude.employeemanager.service;
 
 import com.apptitude.employeemanager.dto.EmployeeDTO;
+import com.apptitude.employeemanager.model.Employee;
 import com.apptitude.employeemanager.repository.EmployeeRepository;
 import java.util.List;
 import java.util.Optional;
