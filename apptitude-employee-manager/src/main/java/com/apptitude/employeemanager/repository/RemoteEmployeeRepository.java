@@ -1,6 +1,7 @@
 package com.apptitude.employeemanager.repository;
 
 import com.apptitude.employeemanager.dto.EmployeeDTO;
+import com.apptitude.employeemanager.model.Department;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -66,14 +67,14 @@ public class RemoteEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public List<EmployeeDTO> findByDepartment(String department) {
-        if (department == null || department.trim().isEmpty()) {
+    public List<EmployeeDTO> findByDepartment(Department department) {
+        if (department == null) {
             return Collections.emptyList();
         }
 
         return findAll().stream()
                 .filter(emp -> emp != null && emp.department() != null)
-                .filter(emp -> emp.department().equalsIgnoreCase(department.trim()))
+                .filter(emp -> emp.department() == department)
                 .collect(Collectors.toList());
     }
 
@@ -166,10 +167,8 @@ public class RemoteEmployeeRepository implements EmployeeRepository {
 
         Long id = node.hasNonNull("id") ? node.get("id").asLong() : null;
         String name = node.hasNonNull("name") ? node.get("name").asText() : null;
-        String department = node.path("company").path("name").asText();
-        if (department == null || department.isBlank()) {
-            department = "Unknown";
-        }
+        String departmentName = node.path("company").path("name").asText();
+        Department department = Department.fromString(departmentName);
 
         List<String> skills = new ArrayList<>();
         if (node.has("email") && !node.get("email").isNull()) {

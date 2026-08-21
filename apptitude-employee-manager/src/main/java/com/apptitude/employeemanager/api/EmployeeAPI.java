@@ -1,7 +1,9 @@
 package com.apptitude.employeemanager.api;
 
 import com.apptitude.employeemanager.dto.EmployeeDTO;
+import com.apptitude.employeemanager.model.Department;
 import com.apptitude.employeemanager.service.EmployeeService;
+
 import java.util.*;
 
 /**
@@ -56,7 +58,7 @@ public class EmployeeAPI {
      * GET /api/v1/employees?department={department}
      * Retrieve employees by department.
      */
-    public ApiResponse<List<EmployeeDTO>> getEmployeesByDepartment(String department) {
+    public ApiResponse<List<EmployeeDTO>> getEmployeesByDepartment(Department department) {
         try {
             List<EmployeeDTO> employees = employeeService.getEmployeesByDepartment(department);
             return new ApiResponse<>(200, "Employees retrieved successfully", employees);
@@ -86,9 +88,9 @@ public class EmployeeAPI {
      * GET /api/v1/employees/stats/departments
      * Get employee count by department.
      */
-    public ApiResponse<Map<String, Long>> getEmployeeCountByDepartment() {
+    public ApiResponse<Map<Department, Long>> getEmployeeCountByDepartment() {
         try {
-            Map<String, Long> stats = employeeService.getEmployeeCountByDepartment();
+            Map<Department, Long> stats = employeeService.getEmployeeCountByDepartment();
             return new ApiResponse<>(200, "Statistics retrieved", stats);
         } catch (Exception e) {
             return new ApiResponse<>(500, "Error retrieving statistics: " + e.getMessage(), null);

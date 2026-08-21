@@ -1,10 +1,13 @@
 package com.apptitude.employeemanager.service;
 
 import com.apptitude.employeemanager.dto.EmployeeDTO;
+import com.apptitude.employeemanager.model.Department;
 import com.apptitude.employeemanager.model.Employee;
 import com.apptitude.employeemanager.repository.EmployeeRepository;
+
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -28,7 +31,7 @@ public class EmployeeService {
         if (employee.name() == null || employee.name().trim().isEmpty()) {
             throw new IllegalArgumentException("Employee name cannot be empty");
         }
-        if (employee.department() == null || employee.department().trim().isEmpty()) {
+        if (employee.department() == null) {
             throw new IllegalArgumentException("Employee department cannot be empty");
         }
         return repository.create(employee);
@@ -54,8 +57,8 @@ public class EmployeeService {
     /**
      * Retrieve employees by department.
      */
-    public List<EmployeeDTO> getEmployeesByDepartment(String department) {
-        if (department == null || department.trim().isEmpty()) {
+    public List<EmployeeDTO> getEmployeesByDepartment(Department department) {
+        if (department == null) {
             throw new IllegalArgumentException("Department name cannot be empty");
         }
         return repository.findByDepartment(department);
@@ -64,7 +67,7 @@ public class EmployeeService {
     /**
      * Get count of employees in each department.
      */
-    public java.util.Map<String, Long> getEmployeeCountByDepartment() {
+    public Map<Department, Long> getEmployeeCountByDepartment() {
         return repository.findAll().stream()
                 .collect(Collectors.groupingBy(EmployeeDTO::department, Collectors.counting()));
     }

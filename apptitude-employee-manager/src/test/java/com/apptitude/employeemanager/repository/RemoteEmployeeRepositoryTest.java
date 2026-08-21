@@ -1,6 +1,7 @@
 package com.apptitude.employeemanager.repository;
 
 import com.apptitude.employeemanager.dto.EmployeeDTO;
+import com.apptitude.employeemanager.model.Department;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -33,10 +34,10 @@ class RemoteEmployeeRepositoryTest {
 
     @Test
     void shouldFilterEmployeesByDepartment() {
-        List<EmployeeDTO> employees = repository.findByDepartment("Romaguera-Crona");
+        List<EmployeeDTO> employees = repository.findByDepartment(Department.UNKNOWN);
 
         assertNotNull(employees);
         assertFalse(employees.isEmpty());
-        assertTrue(employees.stream().allMatch(emp -> "Romaguera-Crona".equalsIgnoreCase(emp.department())));
+        assertTrue(employees.stream().allMatch(emp -> Department.UNKNOWN.equals(emp.department())));
     }
 }

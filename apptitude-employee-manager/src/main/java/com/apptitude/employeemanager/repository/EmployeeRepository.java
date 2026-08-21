@@ -1,6 +1,8 @@
 package com.apptitude.employeemanager.repository;
 
 import com.apptitude.employeemanager.dto.EmployeeDTO;
+import com.apptitude.employeemanager.model.Department;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,7 @@ public interface EmployeeRepository {
     /**
      * Retrieve employees by department.
      */
-    List<EmployeeDTO> findByDepartment(String department);
+    List<EmployeeDTO> findByDepartment(Department department);
 
     /**
      * Update an existing employee.

@@ -1,5 +1,6 @@
 package com.apptitude.employeemanager;
 
+import com.apptitude.employeemanager.model.Department;
 import com.apptitude.employeemanager.model.Employee;
 import org.junit.jupiter.api.Test;
 
@@ -14,13 +15,13 @@ class AppTest {
         Employee employee = new Employee(
                 1L,
                 "Alice Johnson",
-                "Engineering",
+                Department.ENGINEERING,
                 Arrays.asList("Java", "Spring")
         );
 
         assertEquals(1L, employee.id());
         assertEquals("Alice Johnson", employee.name());
-        assertEquals("Engineering", employee.department());
+        assertEquals(Department.ENGINEERING, employee.department());
         assertEquals(Arrays.asList("Java", "Spring"), employee.skills());
     }
 }
