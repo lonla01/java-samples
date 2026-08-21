@@ -10,6 +10,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
  */
 public class EmployeeService {
 
+    private static final ExecutorService VIRTUAL_THREAD_EXECUTOR =
+            Executors.newVirtualThreadPerTaskExecutor();
     private final EmployeeRepository repository;
 
     public EmployeeService(EmployeeRepository repository) {
@@ -117,7 +121,7 @@ public class EmployeeService {
      * Asynchronously find and employee by ID. 
      */
     public CompletableFuture<EmployeeDTO> findEmployeeByIdAsync(Long id) {
-        return CompletableFuture.supplyAsync(() -> getEmployeeById(id))
+        return CompletableFuture.supplyAsync(() -> getEmployeeById(id), VIRTUAL_THREAD_EXECUTOR)
                 .thenApply(opt -> opt.orElseThrow(
                         () -> new IllegalArgumentException("Employee with ID " + id + " not found")
                 ));
@@ -131,6 +135,6 @@ public class EmployeeService {
                 return new Employee(dto.id(), dto.name(), dto.department(), dto.skills());
             }
             throw new IllegalArgumentException("Employee with ID " + id + " not found");
-        });
+        }, VIRTUAL_THREAD_EXECUTOR);
     }
 }

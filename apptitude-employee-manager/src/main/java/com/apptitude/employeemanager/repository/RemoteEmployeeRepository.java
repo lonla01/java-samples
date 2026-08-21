@@ -17,6 +17,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +32,7 @@ public class RemoteEmployeeRepository implements EmployeeRepository {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(5))
+            .executor(Executors.newVirtualThreadPerTaskExecutor())
             .build();
 
     @Override
@@ -123,10 +127,16 @@ public class RemoteEmployeeRepository implements EmployeeRepository {
         HttpRequest request = requestBuilder.build();
         HttpResponse<String> response;
         try {
-            response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            response = HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString()).get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("Interrupted while calling remote employee API", e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException ioException) {
+                throw ioException;
+            }
+            throw new IOException("Unable to call remote employee API", cause);
         }
 
         if (response.statusCode() >= 400) {

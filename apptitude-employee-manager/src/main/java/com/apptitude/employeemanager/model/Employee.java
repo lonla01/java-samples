@@ -4,8 +4,11 @@ import java.util.List;
 
 public record Employee(Long id, String name, Department department, List<String> skills) {
 
-    public Employee {
-        skills = List.copyOf(skills == null ? List.of() : skills);
+    public Employee(Long id, String name, Department department, List<String> skills) {
+        this.id = id;
+        this.name = name;
+        this.department = department;
+        this.skills = List.copyOf(skills == null ? List.of() : skills);
     }
 
     public String departmentLabel() {
